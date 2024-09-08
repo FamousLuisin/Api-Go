@@ -1,22 +1,25 @@
 package controller
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/FamousLuisin/api-go/src/config/rest_err"
+	"github.com/FamousLuisin/api-go/src/config/validation"
 	"github.com/FamousLuisin/api-go/src/controller/model/request"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateUser(c *gin.Context) {
 
+	log.Println("Init CreateUser controller")
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
-		restErr := rest_err.NewBadRequestError(fmt.Sprintf("There are some incorrect filds, error=%s", err.Error()))
+		log.Printf("Error trying to marshal object, error=\n%s", err.Error())
 
-		c.JSON(restErr.Code, restErr)
+		errRest := validation.ValidateUserError(err)
+
+		c.JSON(errRest.Code, errRest)
 		return
 	}
 
