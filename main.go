@@ -3,12 +3,15 @@ package main
 import (
 	"log"
 
+	"github.com/FamousLuisin/api-go/src/config/logger"
 	"github.com/FamousLuisin/api-go/src/controller/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	logger.Info("About to start application")
 
 	err := godotenv.Load()
 	if err != nil {
