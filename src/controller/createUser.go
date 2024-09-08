@@ -6,8 +6,13 @@ import (
 	"github.com/FamousLuisin/api-go/src/config/logger"
 	"github.com/FamousLuisin/api-go/src/config/validation"
 	"github.com/FamousLuisin/api-go/src/controller/model/request"
+	"github.com/FamousLuisin/api-go/src/model"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func CreateUser(c *gin.Context) {
@@ -28,9 +33,15 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
+
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(err.Code, err)
+	}
+
 	logger.Info("User created successfully",
 		zap.String("journey", "createUser"),
 	)
 
-	c.JSON(http.StatusOK, userRequest)
+	c.String(http.StatusOK, "")
 }
