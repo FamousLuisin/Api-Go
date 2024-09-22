@@ -36,10 +36,11 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 
 	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
 
-	domainResult, err := uc.Service.CreateUser(domain)
+	domainResult, err := uc.Service.CreateUserServices(domain)
 
 	if err != nil {
 		logger.Error("Error truing to call CreateUser Service", err, zap.String("journey", "createUser"))
+		c.JSON(err.Code, err)
 		return
 	}
 
